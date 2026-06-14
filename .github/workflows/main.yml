@@ -110,7 +110,7 @@ jobs:
         category: "/language:${{matrix.language}}"
     # Single deploy job since we're just deploying
 
-  deploy:
+    deploy:
     needs: analyze
     environment:
       name: github-pages
@@ -119,13 +119,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.2
+
       - name: Setup Pages
         uses: actions/configure-pages@v4.0.0
+
+      - name: Build site
+        run: |
+          mkdir dist
+          cp -r teton/1.6/* dist/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
         with:
-          # Upload only teton/1.6
-          path: 'teton/1.6'
+          path: dist
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v3.0.1
